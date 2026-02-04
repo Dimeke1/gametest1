@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Тест о хобби</title>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@600&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --paper: #f9f5ed;
@@ -25,9 +28,9 @@
       width: 100%;
       height: 100%;
       z-index: -1;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 10%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 12%);
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 10%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 12%);
       pointer-events: none;
     }
 
@@ -50,12 +53,13 @@
       width: 100%;
       background: var(--paper);
       border: 1px solid var(--border);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
       padding: 35px;
       border-radius: 6px;
       position: relative;
       backdrop-filter: blur(2px);
     }
+
     .container::before,
     .container::after {
       content: "";
@@ -65,8 +69,14 @@
       width: 2px;
       background: var(--gold);
     }
-    .container::before { left: 15px; }
-    .container::after { right: 15px; }
+
+    .container::before {
+      left: 15px;
+    }
+
+    .container::after {
+      right: 15px;
+    }
 
     h1 {
       font-family: 'Cormorant Garamond', serif;
@@ -96,9 +106,11 @@
       padding: 0;
       margin: 20px 0;
     }
+
     .options li {
       margin: 12px 0;
     }
+
     .options label {
       cursor: pointer;
       display: flex;
@@ -108,9 +120,11 @@
       border-radius: 4px;
       transition: background 0.2s;
     }
+
     .options label:hover {
       background: #f0e8dd;
     }
+
     .options input {
       margin-right: 12px;
       transform: scale(1.1);
@@ -130,6 +144,7 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
+
     button:hover {
       opacity: 0.9;
     }
@@ -141,10 +156,12 @@
       font-weight: bold;
       text-align: center;
     }
+
     .correct {
       background-color: rgba(58, 107, 53, 0.15);
       color: var(--correct);
     }
+
     .incorrect {
       background-color: rgba(166, 61, 46, 0.15);
       color: var(--incorrect);
@@ -155,6 +172,7 @@
       font-size: 1.3rem;
       line-height: 1.6;
     }
+
     .end-screen h2 {
       font-family: 'Cormorant Garamond', serif;
       color: var(--accent);
@@ -180,7 +198,7 @@
       left: 0;
       width: 200%;
       height: 200%;
-      background-image: 
+      background-image:
         radial-gradient(2px 2px at 10% 20%, white, transparent),
         radial-gradient(1.5px 1.5px at 25% 10%, #c9a87a, transparent),
         radial-gradient(1px 1px at 40% 30%, white, transparent),
@@ -203,11 +221,28 @@
     }
 
     @keyframes scrollStars {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-50%); }
+      0% {
+        transform: translateY(0);
+      }
+
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
   </style>
 </head>
+
 <body>
 
   <div class="container">
@@ -230,7 +265,18 @@
     <!-- Конец -->
     <div id="end-screen" style="display: none;" class="end-screen">
       <h2>Игра окончена</h2>
-      <p>Вы ответили на все вопросы.</p>
+      <p>Ваш результат: <span id="final-score" style="font-weight: bold; color: var(--accent);"></span> из <span
+          id="total-questions"></span></p>
+
+      <div style="text-align: left; margin-top: 20px;">
+        <label for="player-name">Введите ваше имя для сохранения результата:</label>
+        <input type="text" id="player-name" placeholder="Ваше имя...">
+      </div>
+
+      <button id="save-btn">Сохранить и посмотреть результаты</button>
+      <button id="restart-btn"
+        style="background: transparent; border: 1px solid var(--accent); color: var(--accent); margin-top: 10px;">Пройти
+        заново</button>
     </div>
   </div>
 
@@ -339,6 +385,7 @@
     const nextBtn = document.getElementById('next-btn');
 
     let currentQuestionIndex = 0;
+    let score = 0;
 
     function showQuestion(index) {
       const q = questions[index];
@@ -370,11 +417,14 @@
       const correctIndex = questions[currentQuestionIndex].correct;
       const isCorrect = userAnswer === correctIndex;
 
-      feedbackMessage.textContent = isCorrect 
-        ? "Правильно!" 
-        : `Неверно. Правильный ответ: ${String.fromCharCode(65 + correctIndex)}. ${questions[currentQuestionIndex].options[correctIndex]}`;
-      
-      feedbackMessage.className = "feedback " + (isCorrect ? "correct" : "incorrect");
+      if (isCorrect) {
+        score++;
+        feedbackMessage.textContent = "Правильно!";
+        feedbackMessage.className = "feedback correct";
+      } else {
+        feedbackMessage.textContent = `Неверно. Правильный ответ: ${String.fromCharCode(65 + correctIndex)}. ${questions[currentQuestionIndex].options[correctIndex]}`;
+        feedbackMessage.className = "feedback incorrect";
+      }
 
       quizScreen.style.display = 'none';
       feedbackScreen.style.display = 'block';
@@ -387,12 +437,44 @@
       if (currentQuestionIndex < questions.length) {
         showQuestion(currentQuestionIndex);
       } else {
-        feedbackScreen.style.display = 'none';
-        endScreen.style.display = 'block';
+        showEndScreen();
       }
+    });
+
+    function showEndScreen() {
+      feedbackScreen.style.display = 'none';
+      endScreen.style.display = 'block';
+
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('total-questions').textContent = questions.length;
+    }
+
+    document.getElementById('save-btn').addEventListener('click', () => {
+      const nameInput = document.getElementById('player-name');
+      const name = nameInput.value.trim() || 'Аноним';
+
+      const result = {
+        name: name,
+        score: score,
+        date: new Date().toLocaleDateString()
+      };
+
+      const customResults = JSON.parse(localStorage.getItem('quizResults')) || [];
+      customResults.push(result);
+      localStorage.setItem('quizResults', JSON.stringify(customResults));
+
+      window.location.href = 'results.html';
+    });
+
+    document.getElementById('restart-btn').addEventListener('click', () => {
+      currentQuestionIndex = 0;
+      score = 0;
+      endScreen.style.display = 'none';
+      showQuestion(0);
     });
 
     showQuestion(0);
   </script>
 </body>
+
 </html>
